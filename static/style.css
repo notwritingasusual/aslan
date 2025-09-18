@@ -13,13 +13,9 @@ header .banner {
     text-align: center;
 }
 
-header .logo img{
-    font-size: 24px;
-    font-weight: bold;
-    color: #ffffff;
-    width: 250px;
+header .logo img {
+    width: 150px;
     height: auto;
-    
 }
 
 main {
@@ -32,12 +28,12 @@ main {
     display: flex;
     flex-direction: column;
     gap: 10px;
-    margin-bottom: 40px;
+    margin-bottom: 50px;
 }
 
-.post-form input, 
+.post-form input,
 .post-form textarea {
-    padding: 10px;
+    padding: 20px;
     border-radius: 5px;
     border: none;
     background-color: #1e1e1e;
@@ -49,7 +45,9 @@ main {
     outline: 2px solid #0b3d0b;
 }
 
-.post-form button {
+/* Buttons */
+.post-form button,
+.search-form button {
     padding: 10px;
     border: none;
     border-radius: 5px;
@@ -59,11 +57,24 @@ main {
     font-weight: bold;
 }
 
-.post-form button:hover {
+.post-form button:hover,
+.search-form button:hover {
     background-color: #096609;
 }
 
-.posts .post {
+/* Search form */
+.search-form input {
+    padding: 8px;
+    width: 250px;
+    border-radius: 5px;
+    border: none;
+    background-color: #1e1e1e;
+    color: #e0e0e0;
+}
+
+/* Post list */
+.posts .post,
+.results {
     background-color: #1e1e1e;
     padding: 15px;
     border-radius: 5px;
@@ -73,8 +84,65 @@ main {
 .posts .post h2 {
     color: #62d840;
     margin-top: 0;
+    font-size: 15px;
 }
 
-.posts .post p {
-    margin: 10px 0 0 0;
+.posts .post-content {
+    color: #e0e0e0;
+}
+
+/* CKEditor container with black borders */
+.ck-editor {
+    border: 2px solid #000000; /* black border */
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+    margin-bottom: 20px;
+}
+
+/* CKEditor toolbar */
+.ck-toolbar {
+    background: #0b3d0b;
+    border-bottom: 1px solid #000000; /* black border */
+    border-radius: 10px 10px 0 0;
+}
+
+/* CKEditor buttons */
+.ck-button {
+    color: #e0e0e0 !important;
+}
+
+.ck-button:hover {
+    background-color: #62d840 !important;
+    color: #121212 !important;
+}
+
+/* CKEditor typing area - taller, black border */
+.ck-editor__editable_inline {
+    min-height: 300px !important;  /* taller editor */
+    max-height: 600px;
+    overflow-y: auto;
+    background-color: #121212 !important;
+    color: #e0e0e0 !important;
+    padding: 15px;
+    border: 1px solid #000000; /* black border inside editor area */
+    border-radius: 5px;
+}
+
+/* Inside editor content */
+.ck-content h2,
+.ck-content h3 {
+    color: #62d840 !important;
+}
+
+.ck-content strong {
+    color: #ffffff !important;
+}
+
+.ck-content a {
+    color: #62d840 !important;
+    text-decoration: none;
+}
+
+.ck-content a:hover {
+    text-decoration: underline;
 }

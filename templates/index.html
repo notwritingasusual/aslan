@@ -4,32 +4,92 @@
     <meta charset="UTF-8">
     <title>ASLAN</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    
+    <!-- CKEditor 5 Classic -->
+    <script src="https://cdn.ckeditor.com/ckeditor5/41.0.0/classic/ckeditor.js"></script>
+    
+    <!-- CKEditor Dark Theme Overrides -->
+    <style>
+        /* CKEditor container */
+        .ck-editor__main {
+            background-color: #121212 !important;
+        }
+        .ck-editor__editable_inline {
+            background-color: #121212 !important;
+            color: #e0e0e0 !important;
+        }
+        .ck-toolbar {
+            background-color: #0b3d0b !important;
+            border-bottom: 1px solid #62d840 !important;
+        }
+        .ck-button {
+            color: #e0e0e0 !important;
+        }
+        .ck-button:hover {
+            background-color: #62d840 !important;
+            color: #121212 !important;
+        }
+        .ck-content h2,
+        .ck-content h3 {
+            color: #62d840 !important;
+        }
+        .ck-content strong {
+            color: #ffffff !important;
+        }
+        .ck-content a {
+            color: #62d840 !important;
+            text-decoration: none;
+        }
+        .ck-content a:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body>
-    <header>
-        <div class="banner">
+<header>
+    <div class="banner">
         <div class="logo">
-  <img src="static/images/bloglogo2.png" alt="Company Logo">
-</div>
-    </header>
+            <img src="static/images/bloglogo2.png" alt="Company Logo">
+        </div>
 
-    <main>
-        <section class="post-form">
-            <form method="POST">
-                <input type="text" name="title" placeholder="Post Title" required>
-                <textarea name="content" placeholder="Write your blog post here..." rows="5" required></textarea>
-                <button type="submit">Post</button>
-            </form>
-        </section>
+        <!-- Search Form -->
+        <form method="get" action="/" class="search-form">
+            <input type="text" name="q" placeholder="Search posts..." value="{{ query }}">
+            <button type="submit">Search</button>
+        </form>
+    </div>
+</header>
 
-        <section class="posts">
-            {% for post in posts %}
-                <div class="post">
-                    <h2>{{ post.title }}</h2>
-                    <p>{{ post.content }}</p>
+<main>
+
+    <!-- New Post Form -->
+    <section class="post-form">
+        <form method="POST">
+            <input type="text" name="title" placeholder="Post Title" required>
+            <textarea name="content" placeholder="Write your blog post here..." rows="5" required></textarea>
+            <button type="submit">Post</button>
+        </form>
+    </section>
+
+    <!-- Render Posts -->
+    <section class="posts">
+        {% for post in posts %}
+            <div class="post">
+                <h2>{{ post.title }}</h2>
+                <div class="post-content">
+                    {{ post.content | safe }}
                 </div>
-            {% endfor %}
-        </section>
-    </main>
+            </div>
+        {% endfor %}
+    </section>
+
+</main>
+
+<!-- Initialize CKEditor -->
+<script>
+ClassicEditor
+    .create(document.querySelector('textarea'))
+    .catch(error => console.error(error));
+</script>
 </body>
 </html>

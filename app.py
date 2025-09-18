@@ -24,6 +24,7 @@ with app.app_context():
 @app.route('/', methods=['GET', 'POST'])
 def index():
     if request.method == 'POST':
+        # Handle new post creation
         title = request.form.get('title')
         content = request.form.get('content')
         if title and content:
@@ -32,8 +33,16 @@ def index():
             db.session.commit()
         return redirect(url_for('index'))
     
-    posts = Post.query.all()
-    return render_template('index.html', posts=posts)
+    # Handle search
+    query = request.args.get("q", "")
+    if query:
+        posts = Post.query.filter(
+            (Post.title.ilike(f"%{query}%")) | (Post.content.ilike(f"%{query}%"))
+        ).all()
+    else:
+        posts = Post.query.all()
+    
+    return render_template("index.html", posts=posts, query=query)
 
 if __name__ == '__main__':
     app.run(debug=True)
