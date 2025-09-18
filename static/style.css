@@ -1,0 +1,77 @@
+/* Dark theme with homebrew green accents */
+body {
+    background-color: #121212;
+    color: #e0e0e0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+header .banner {
+    background-color: #0b3d0b; /* homebrew green */
+    padding: 20px;
+    text-align: center;
+}
+
+header .logo {
+    font-size: 24px;
+    font-weight: bold;
+    color: #ffffff;
+}
+
+main {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 0 20px;
+}
+
+.post-form form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 40px;
+}
+
+.post-form input, 
+.post-form textarea {
+    padding: 10px;
+    border-radius: 5px;
+    border: none;
+    background-color: #1e1e1e;
+    color: #e0e0e0;
+}
+
+.post-form input:focus,
+.post-form textarea:focus {
+    outline: 2px solid #0b3d0b;
+}
+
+.post-form button {
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: #0b3d0b;
+    color: #ffffff;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.post-form button:hover {
+    background-color: #096609;
+}
+
+.posts .post {
+    background-color: #1e1e1e;
+    padding: 15px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+
+.posts .post h2 {
+    color: #0b3d0b;
+    margin-top: 0;
+}
+
+.posts .post p {
+    margin: 10px 0 0 0;
+}
