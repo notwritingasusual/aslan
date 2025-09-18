@@ -13,10 +13,13 @@ header .banner {
     text-align: center;
 }
 
-header .logo {
+header .logo img{
     font-size: 24px;
     font-weight: bold;
     color: #ffffff;
+    width: 250px;
+    height: auto;
+    
 }
 
 main {
@@ -68,7 +71,7 @@ main {
 }
 
 .posts .post h2 {
-    color: #0b3d0b;
+    color: #62d840;
     margin-top: 0;
 }
 
