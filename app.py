@@ -34,7 +34,7 @@ def index():
         return redirect(url_for('index'))
     
     # Handle search
-    query = request.args.get("q", "")
+    query = request.args.get("q", "").strip()
     if query:
         posts = Post.query.filter(
             (Post.title.ilike(f"%{query}%")) | (Post.content.ilike(f"%{query}%"))

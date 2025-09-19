@@ -1,4 +1,4 @@
-/* Dark theme with homebrew green accents */
+/* 🌙 Dark theme with homebrew green accents */
 body {
     background-color: #121212;
     color: #e0e0e0;
@@ -7,8 +7,9 @@ body {
     padding: 0;
 }
 
+/* Header banner */
 header .banner {
-    background-color: #0b3d0b; /* homebrew green */
+    background-color: #0b3d0b; /* deep green */
     padding: 20px;
     text-align: center;
 }
@@ -18,12 +19,14 @@ header .logo img {
     height: auto;
 }
 
+/* Main container */
 main {
     max-width: 800px;
     margin: 20px auto;
     padding: 0 20px;
 }
 
+/* 📝 Post form */
 .post-form form {
     display: flex;
     flex-direction: column;
@@ -31,101 +34,111 @@ main {
     margin-bottom: 50px;
 }
 
-.post-form input,
-.post-form textarea {
-    padding: 20px;
+.post-form input {
+    padding: 15px;
     border-radius: 5px;
-    border: none;
+    border: 1px solid #62d840; /* green border */
     background-color: #1e1e1e;
     color: #e0e0e0;
 }
 
-.post-form input:focus,
-.post-form textarea:focus {
-    outline: 2px solid #0b3d0b;
+.post-form input:focus {
+    outline: 1px solid #0b3d0b;
 }
 
-/* Buttons */
+/* Buttons (Post + Search) */
 .post-form button,
 .search-form button {
-    padding: 10px;
-    border: none;
+    padding: 10px 15px;
     border-radius: 5px;
+    border: 1px solid #62d840; /* green border */
     background-color: #0b3d0b;
     color: #ffffff;
     cursor: pointer;
     font-weight: bold;
+    transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
 }
 
 .post-form button:hover,
 .search-form button:hover {
-    background-color: #096609;
+    background-color: #62d840;
+    color: #121212;
 }
 
-/* Search form */
+/* 🔍 Search form */
+.search-form {
+    margin-top: 15px;
+}
+
 .search-form input {
     padding: 8px;
     width: 250px;
     border-radius: 5px;
-    border: none;
+    border: 1px solid #62d840;
     background-color: #1e1e1e;
     color: #e0e0e0;
 }
 
-/* Post list */
-.posts .post,
-.results {
+/* 📌 Posts */
+.posts .post {
     background-color: #1e1e1e;
     padding: 15px;
     border-radius: 5px;
     margin-bottom: 20px;
+    border: 1px solid #2a2a2a;
 }
 
 .posts .post h2 {
     color: #62d840;
     margin-top: 0;
-    font-size: 15px;
+    font-size: 18px;
 }
 
 .posts .post-content {
     color: #e0e0e0;
 }
 
-/* CKEditor container with black borders */
+/* ================================
+   ✨ Minimalistic CKEditor Styling
+   ================================ */
+
+/* Remove CKEditor borders/shadows */
 .ck-editor {
-    border: 2px solid #000000; /* black border */
-    border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+    border: none !important;
+    background: transparent !important;
+    box-shadow: none !important;
     margin-bottom: 20px;
 }
 
-/* CKEditor toolbar */
+/* Toolbar */
 .ck-toolbar {
-    background: #0b3d0b;
-    border-bottom: 1px solid #000000; /* black border */
-    border-radius: 10px 10px 0 0;
+    background: transparent !important;
+    border: none !important;
+    padding: 4px 0 !important;
 }
 
-/* CKEditor buttons */
+/* Toolbar buttons — no border */
 .ck-button {
-    color: #e0e0e0 !important;
+    color: #ccc !important;
+    background: transparent !important;
+    border: none !important; /* removed border */
+    border-radius: 3px !important;
 }
-
 .ck-button:hover {
-    background-color: #62d840 !important;
-    color: #121212 !important;
+    background-color: rgba(98, 216, 64, 0.15) !important;
+    color: #62d840 !important;
 }
 
-/* CKEditor typing area - taller, black border */
+/* Editing area */
 .ck-editor__editable_inline {
-    min-height: 300px !important;  /* taller editor */
-    max-height: 600px;
-    overflow-y: auto;
-    background-color: #121212 !important;
+    min-height: 250px !important;
+    background-color: #1e1e1e !important;
     color: #e0e0e0 !important;
-    padding: 15px;
-    border: 1px solid #000000; /* black border inside editor area */
-    border-radius: 5px;
+    padding: 15px !important;
+    border: 1px solid #62d840 !important;
+    border-radius: 5px !important;
+    line-height: 1.6;
+    font-size: 15px;
 }
 
 /* Inside editor content */
