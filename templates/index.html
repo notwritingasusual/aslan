@@ -4,11 +4,9 @@
     <meta charset="UTF-8">
     <title>ASLAN</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-
-    <!-- CKEditor 5 -->
-    <script src="https://cdn.ckeditor.com/ckeditor5/41.0.0/classic/ckeditor.js"></script>
 </head>
 <body>
+
 <header>
     <div class="banner">
         <div class="logo">
@@ -26,22 +24,20 @@
 <main>
     <!-- New Post Form -->
     <section class="post-form">
-        <form method="POST">
+        <form method="POST" action="/">
             <input type="text" name="title" placeholder="Post Title" required>
-            <textarea name="content" placeholder="Write your blog post here..." rows="5" required></textarea>
+            <textarea name="content" placeholder="Write your blog post here..." rows="10" required></textarea>
             <button type="submit">Post</button>
         </form>
     </section>
 
-    <!-- Posts or Search Results -->
+    <!-- Posts -->
     <section class="posts">
         {% if posts %}
             {% for post in posts %}
                 <div class="post">
                     <h2>{{ post.title }}</h2>
-                    <div class="post-content">
-                        {{ post.content | safe }}
-                    </div>
+                    <p>{{ post.content | safe }}</p>
                 </div>
             {% endfor %}
         {% else %}
@@ -50,13 +46,5 @@
     </section>
 </main>
 
-<!-- Initialize CKEditor -->
-<script>
-ClassicEditor
-    .create(document.querySelector('textarea'), {
-        toolbar: [ 'bold', 'italic', 'link', 'bulletedList', 'numberedList' ] // keep it minimal
-    })
-    .catch(error => console.error(error));
-</script>
 </body>
 </html>
