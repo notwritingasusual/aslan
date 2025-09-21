@@ -2,8 +2,26 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ASLAN</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        #expandable-section {
+            display: none;
+            /* Add a simple fade-in animation */
+            animation: fadeIn 0.3s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        /* When the form is expanded, show the section as a flex container */
+        .is-expanded #expandable-section {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+    </style>
 </head>
 <body>
 
@@ -14,8 +32,8 @@
         </div>
 
         <!-- Search Form -->
-        <form method="get" action="/" class="search-form">
-            <input type="text" name="q" placeholder="Search posts..." value="{{ query }}">
+        <form method="get" action="/" class="search-form" autocomplete="off">
+            <input type="text" name="q" placeholder="Search posts..." value="{{ query }}" aria-label="Search posts">
             <button type="submit">Search</button>
         </form>
     </div>
@@ -24,10 +42,13 @@
 <main>
     <!-- New Post Form -->
     <section class="post-form">
-        <form method="POST" action="/">
-            <input type="text" name="title" placeholder="Post Title" required>
-            <textarea name="content" placeholder="Write your blog post here..." rows="10" required></textarea>
-            <button type="submit">Post</button>
+        <form method="POST" action="/" autocomplete="off" id="post-form-container">
+            <input type="text" id="title-input" name="title" placeholder="Post Title" required aria-label="Post Title">
+            
+            <div id="expandable-section">
+                <textarea name="content" id="content-textarea" placeholder="Write your blog post here..." rows="3" required aria-label="Post Content"></textarea>
+                <button type="submit">Post</button>
+            </div>
         </form>
     </section>
 
@@ -37,7 +58,7 @@
             {% for post in posts %}
                 <div class="post">
                     <h2>{{ post.title }}</h2>
-                    <p>{{ post.content | safe }}</p>
+                    <div class="post-content">{{ post.content | safe }}</div>
                 </div>
             {% endfor %}
         {% else %}
@@ -45,6 +66,43 @@
         {% endif %}
     </section>
 </main>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const formContainer = document.getElementById('post-form-container');
+        const titleInput = document.getElementById('title-input');
+        const expandableSection = document.getElementById('expandable-section');
+        const contentTextarea = document.getElementById('content-textarea');
+
+        // Function to auto-grow the textarea
+        function autoGrowTextarea() {
+            contentTextarea.style.height = 'auto'; // Reset height to shrink if text is deleted
+            contentTextarea.style.height = (contentTextarea.scrollHeight) + 'px';
+        }
+
+        // Show expandable section on title focus
+        titleInput.addEventListener('focus', () => {
+            formContainer.classList.add('is-expanded');
+            autoGrowTextarea(); // Check size on focus in case of cached content
+        });
+
+        // Hide expandable section when clicking outside, if textarea is empty
+        document.addEventListener('click', (event) => {
+            const isClickInsideForm = formContainer.contains(event.target);
+
+            if (!isClickInsideForm) {
+                if (contentTextarea.value.trim() === '') {
+                    formContainer.classList.remove('is-expanded');
+                    // Reset height when hiding
+                    contentTextarea.style.height = 'auto';
+                }
+            }
+        });
+
+        // Auto-grow textarea on input
+        contentTextarea.addEventListener('input', autoGrowTextarea);
+    });
+</script>
 
 </body>
 </html>

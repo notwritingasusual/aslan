@@ -34,27 +34,44 @@ main {
     margin-bottom: 50px;
 }
 
+/* Unified input and textarea styles */
 .post-form input,
-.post-form textarea {
-    padding: 15px;
+.post-form textarea,
+.search-form input {
     border-radius: 5px;
-    border: 1px solid #62d840; /* green border */
     background-color: #1e1e1e;
     color: #e0e0e0;
     font-size: 15px;
+    border: 1px solid #000000; /* Black border */
+    transition: border-color 0.2s ease-in-out;
 }
 
+.post-form input,
+.post-form textarea {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 15px;
+}
+
+.search-form input {
+    padding: 8px 15px;
+    width: 250px;
+}
+
+/* Focus styles for inputs and textarea */
 .post-form input:focus,
-.post-form textarea:focus {
-    outline: 1px solid #0b3d0b;
+.post-form textarea:focus,
+.search-form input:focus {
+    outline: none;
+    border-color: #62d840; /* green highlight on focus */
 }
 
 /* Make textarea taller */
 .post-form textarea {
-    min-height: 250px;
+    min-height: 80px; /* Smaller initial height */
     max-height: 600px;
-    resize: vertical;
     line-height: 1.6;
+    /* resize: vertical; is removed for auto-grow */
 }
 
 /* Buttons (Post + Search) */
@@ -62,32 +79,24 @@ main {
 .search-form button {
     padding: 10px 15px;
     border-radius: 5px;
-    border: 1px solid #62d840; /* green border */
+    border: 1px solid #000000; /* Black border */
     background-color: #0b3d0b;
     color: #ffffff;
     cursor: pointer;
     font-weight: bold;
-    transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+    transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out, border-color 0.2s ease-in-out;
 }
 
 .post-form button:hover,
 .search-form button:hover {
     background-color: #62d840;
+    border-color: #62d840; /* Show border on hover */
     color: #121212;
 }
 
 /* 🔍 Search form */
 .search-form {
     margin-top: 15px;
-}
-
-.search-form input {
-    padding: 8px;
-    width: 250px;
-    border-radius: 5px;
-    border: 1px solid #62d840;
-    background-color: #1e1e1e;
-    color: #e0e0e0;
 }
 
 /* 📌 Posts */
