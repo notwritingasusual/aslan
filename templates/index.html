@@ -6,27 +6,12 @@
     <title>ASLAN</title>
     <link rel="icon" href="{{ url_for('static', filename='images/bloglogo2.png') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <style>
-        #expandable-section {
-            display: none;
-            /* Add a simple fade-in animation */
-            animation: fadeIn 0.3s ease-in-out;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        /* When the form is expanded, show the section as a flex container */
-        .is-expanded #expandable-section {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-    </style>
 </head>
+
 <body>
 
 <header>
+    <!-- Banner with Logo and Search -->
     <div class="banner">
         <div class="logo">
             <img src="{{ url_for('static', filename='images/bloglogo2.png') }}" alt="Company Logo">
@@ -41,19 +26,34 @@
 </header>
 
 <main>
-    <!-- New Post Form -->
-    <section class="post-form">
-        <form method="POST" action="/" autocomplete="off" id="post-form-container">
-            <input type="text" id="title-input" name="title" placeholder="Post Title" required aria-label="Post Title">
-            
-            <div id="expandable-section">
-                <textarea name="content" id="content-textarea" placeholder="Write your blog post here..." rows="3" required aria-label="Post Content"></textarea>
-                <button type="submit">Post</button>
-            </div>
-        </form>
-    </section>
+    <div id="post-and-upload-container">
+        <!-- New Post Form -->
 
-    <!-- Posts -->
+         <!--Post title-->
+                 <section class="post-form">
+            <form method="POST" action="/" autocomplete="off" id="post-form-container">
+                <input type="text" id="title-input" name="title" placeholder="Post Title" required aria-label="Post Title">
+
+                <!-- Post content with expandable box -->
+                <div id="expandable-section">
+                    <textarea name="content" id="content-textarea" placeholder="Write your blog post here..." rows="3" required aria-label="Post Content"></textarea>
+                    <button type="submit">Post</button>
+                </div>
+             </form>
+             
+             <!--upload file section-->
+        </section>
+         <section class="dropzone-section">
+            <h2>Upload Files</h2>
+            <div id="drop-zone">
+                <p>Drag & drop files here or click to select</p>
+                <input type="file" id="file-input" multiple style="display: none;">
+            </div>
+            <div id="upload-progress"></div>
+        </section>
+    </div>
+
+    <!-- Display Posts to user -->
     <section class="posts">
         {% if posts %}
             {% for post in posts %}
@@ -68,11 +68,11 @@
     </section>
 </main>
 
+<!--Scripts-->
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-        const formContainer = document.getElementById('post-form-container');
+        const postAndUploadContainer = document.getElementById('post-and-upload-container');
         const titleInput = document.getElementById('title-input');
-        const expandableSection = document.getElementById('expandable-section');
         const contentTextarea = document.getElementById('content-textarea');
 
         // Function to auto-grow the textarea
@@ -83,17 +83,17 @@
 
         // Show expandable section on title focus
         titleInput.addEventListener('focus', () => {
-            formContainer.classList.add('is-expanded');
+            postAndUploadContainer.classList.add('is-expanded');
             autoGrowTextarea(); // Check size on focus in case of cached content
         });
 
         // Hide expandable section when clicking outside, if textarea is empty
         document.addEventListener('click', (event) => {
-            const isClickInsideForm = formContainer.contains(event.target);
+            const isClickInside = postAndUploadContainer.contains(event.target);
 
-            if (!isClickInsideForm) {
+            if (!isClickInside) {
                 if (contentTextarea.value.trim() === '') {
-                    formContainer.classList.remove('is-expanded');
+                    postAndUploadContainer.classList.remove('is-expanded');
                     // Reset height when hiding
                     contentTextarea.style.height = 'auto';
                 }
@@ -102,6 +102,61 @@
 
         // Auto-grow textarea on input
         contentTextarea.addEventListener('input', autoGrowTextarea);
+
+        const dropZone = document.getElementById('drop-zone');
+        const fileInput = document.getElementById('file-input');
+        const uploadProgress = document.getElementById('upload-progress');
+
+        dropZone.addEventListener('click', () => fileInput.click());
+
+        dropZone.addEventListener('dragenter', (e) => {
+            e.preventDefault();
+            dropZone.classList.add('dragover');
+        });
+
+        dropZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropZone.classList.add('dragover');
+        });
+
+        dropZone.addEventListener('dragleave', (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('dragover');
+        });
+
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('dragover');
+            const files = e.dataTransfer.files;
+            handleFiles(files);
+        });
+
+        fileInput.addEventListener('change', (e) => {
+            const files = e.target.files;
+            handleFiles(files);
+        });
+
+        function handleFiles(files) {
+            for (const file of files) {
+                uploadFile(file);
+            }
+        }
+
+        function uploadFile(file) {
+            const formData = new FormData();
+            formData.append('file', file);
+
+            fetch('/upload', {
+                method: 'POST',
+                body: formData
+            })
+            .then(() => {
+                window.location.reload();
+            })
+            .catch(error => {
+                console.error('Error uploading file:', error);
+            });
+        }
     });
 </script>
 
