@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 import os
+import re
 
 app = Flask(__name__)
 
@@ -10,6 +11,16 @@ app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{os.path.join(basedir, "data
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
+
+# Custom Jinja2 filter to convert newlines to paragraphs
+def nl2p(value):
+    # Replace all sequences of newlines with a single newline
+    value = re.sub(r'(\r\n|\r|\n)+', '\n', value).strip()
+    # Split by newline and wrap each line in a paragraph tag
+    paragraphs = [f'<p>{p.strip()}</p>' for p in value.split('\n')]
+    return '\n'.join(paragraphs)
+
+app.jinja_env.filters['nl2p'] = nl2p
 
 # Database model
 class Post(db.Model):

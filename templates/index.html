@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ASLAN</title>
+    <link rel="icon" href="{{ url_for('static', filename='images/bloglogo2.png') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <style>
         #expandable-section {
@@ -58,7 +59,7 @@
             {% for post in posts %}
                 <div class="post">
                     <h2>{{ post.title }}</h2>
-                    <div class="post-content">{{ post.content | safe }}</div>
+                    <div class="post-content">{{ post.content | nl2p | safe }}</div>
                 </div>
             {% endfor %}
         {% else %}
