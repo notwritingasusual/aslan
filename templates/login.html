@@ -2,29 +2,86 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - ASLAN</title>
+    <link rel="icon" href="{{ url_for('static', filename='images/bloglogo2.png') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #ffffff;
+        }
+        .login-logo {
+            margin-bottom: 20px;
+        }
+        .login-logo img {
+            width: 150px; /* Adjust size as needed */
+            height: auto;
+        }
+        .login-container {
+            background-color: #fefefe;
+            padding: 30px;
+            border: 0.5px solid #888;
+            border-radius: 8px;
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .login-container h1 {
+            color: #000000;
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+        .login-container input[type="text"],
+        .login-container input[type="password"] {
+            width: calc(100% - 30px);
+            padding: 15px;
+            margin-bottom: 15px;
+            border: 0.5px solid #000000;
+            border-radius: 5px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        .login-container button {
+            width: 150px; /* Smaller width */
+            padding: 10px 15px; /* Smaller padding */
+            border: 0.5px solid #62d840;
+            background-color: #62d840;
+            color: #ffffff;
+            border-radius: 5px;
+            font-size: 16px; /* Smaller font size */
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .login-container button:hover {
+            background-color: #52b830;
+        }
+        .login-container .error-message {
+            color: red;
+            margin-top: 10px;
+        }
+    </style>
 </head>
-<body>
-<header>
-    <div class="banner">
-        <div class="logo">
-            <img src="{{ url_for('static', filename='images/bloglogo2.png') }}" alt="Company Logo">
-        </div>
-    </div>
-</header>
 
-<main>
-    <section class="login-container">
+<body>
+    <div class="login-logo">
+        <img src="{{ url_for('static', filename='images/bloglogo2.png') }}" alt="ASLAN Logo">
+    </div>
+    <div class="login-container">
+        <h1>Login</h1>
         <form method="POST" action="/login">
-            {% if error %}
-                <p style="color: #ff6666;">{{ error }}</p>
-            {% endif %}
             <input type="text" name="username" placeholder="Username" required>
             <input type="password" name="password" placeholder="Password" required>
             <button type="submit">Login</button>
         </form>
-    </section>
-</main>
+        {% if error %}
+            <p class="error-message">{{ error }}</p>
+        {% endif %}
+    </div>
 </body>
 </html>

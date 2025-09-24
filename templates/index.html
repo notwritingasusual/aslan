@@ -10,153 +10,238 @@
 
 <body>
 
-<header>
-    <!-- Banner with Logo and Search -->
-    <div class="banner">
+<div class="container">
+    <nav class="sidebar">
         <div class="logo">
             <img src="{{ url_for('static', filename='images/bloglogo2.png') }}" alt="Company Logo">
         </div>
+        <ul class="menu">
+            <li class="nav-item"><a href="/">Posts</a></li>
+            <li class="nav-item"><a href="#" id="new-post-link">New Post</a></li>
+            <li class="nav-item"><a href="#" id="search-link">Search</a></li>
+            <li class="nav-item"><a href="/logout">Logout</a></li>
+        </ul>
+    </nav>
 
-        <!-- Search Form -->
-        <form method="get" action="/" class="search-form" autocomplete="off">
-            <input type="text" name="q" placeholder="Search posts..." value="{{ query }}" aria-label="Search posts">
-            <button type="submit">Search</button>
-        </form>
-    </div>
-</header>
+    <main>
+        <!-- New Post Form Popup -->
+        <div id="new-post-popup" class="post-form-popup">
+            <div class="post-form-content">
+                <span class="close-button" id="close-new-post">&times;</span>
+                <section class="post-form">
+                    <form method="POST" action="/" autocomplete="off" id="post-form-container">
+                        <input type="text" id="title-input" name="title" placeholder="New Post" required aria-label="Post Title">
+                        <textarea name="content" id="content-textarea" placeholder="Content" rows="3" required aria-label="Post Content"></textarea>
 
-<main>
-    <div id="post-and-upload-container">
-        <!-- New Post Form -->
+                        <!-- Upload File Section (moved inside popup) -->
+                        <section class="dropzone-section">
+                            <h2>Upload Files</h2>
+                            <div id="drop-zone">
+                                <p>Drag & drop files here or click to select</p>
+                                <input type="file" id="file-input" multiple style="display: none;">
+                            </div>
+                            <div id="upload-progress"></div>
+                        </section>
 
-         <!--Post title-->
-                 <section class="post-form">
-            <form method="POST" action="/" autocomplete="off" id="post-form-container">
-                <input type="text" id="title-input" name="title" placeholder="Post Title" required aria-label="Post Title">
-
-                <!-- Post content with expandable box -->
-                <div id="expandable-section">
-                    <textarea name="content" id="content-textarea" placeholder="Write your blog post here..." rows="3" required aria-label="Post Content"></textarea>
-                    <button type="submit">Post</button>
-                </div>
-             </form>
-             
-             <!--upload file section-->
-        </section>
-         <section class="dropzone-section">
-            <h2>Upload Files</h2>
-            <div id="drop-zone">
-                <p>Drag & drop files here or click to select</p>
-                <input type="file" id="file-input" multiple style="display: none;">
+                        <input type="file" id="image-upload-input" accept="image/*" style="display: none;">
+                        <button type="button" id="insert-image-button">Insert Image</button>
+                        <button type="submit">Post</button>
+                    </form>
+                </section>
             </div>
-            <div id="upload-progress"></div>
-        </section>
-    </div>
+        </div>
 
-    <!-- Display Posts to user -->
-    <section class="posts">
-        {% if posts %}
-            {% for post in posts %}
-                <div class="post">
-                    <h2>{{ post.title }}</h2>
-                    <div class="post-content">{{ post.content | nl2p | safe }}</div>
-                </div>
-            {% endfor %}
-        {% else %}
-            <p>No posts found.</p>
-        {% endif %}
-    </section>
-</main>
+        <!-- Search Popup -->
+        <div id="search-popup" class="post-form-popup">
+            <div class="search-popup-content">
+                <span class="close-button" id="close-search">&times;</span>
+                <section class="search-form-section">
+                    <form method="get" action="/" autocomplete="off" class="search-form">
+                        <input type="text" name="q" placeholder="Search posts..." value="{{ query }}" aria-label="Search posts">
+                        <button type="submit">Search</button>
+                    </form>
+                </section>
+            </div>
+        </div>
+
+        <!-- Display Posts to user -->
+        <section class="posts">
+            {% if posts %}
+                {% for post in posts %}
+                    <div class="post">
+                        <h2>{{ post.title }}</h2>
+                        <div class="post-content">{{ post.content | nl2p | safe }}</div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p>No posts found.</p>
+            {% endif %}
+        </section>
+    </main>
+</div>
 
 <!--Scripts-->
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-        const postAndUploadContainer = document.getElementById('post-and-upload-container');
-        const titleInput = document.getElementById('title-input');
-        const contentTextarea = document.getElementById('content-textarea');
+        const newPostLink = document.getElementById('new-post-link');
+        const newPostPopup = document.getElementById('new-post-popup');
+        const closeNewPostButton = document.getElementById('close-new-post');
 
-        // Function to auto-grow the textarea
-        function autoGrowTextarea() {
-            contentTextarea.style.height = 'auto'; // Reset height to shrink if text is deleted
-            contentTextarea.style.height = (contentTextarea.scrollHeight) + 'px';
-        }
+        const searchLink = document.getElementById('search-link');
+        const searchPopup = document.getElementById('search-popup');
+        const closeSearchButton = document.getElementById('close-search');
 
-        // Show expandable section on title focus
-        titleInput.addEventListener('focus', () => {
-            postAndUploadContainer.classList.add('is-expanded');
-            autoGrowTextarea(); // Check size on focus in case of cached content
+        newPostLink.addEventListener('click', (event) => {
+            event.preventDefault();
+            newPostPopup.classList.add('visible');
         });
 
-        // Hide expandable section when clicking outside, if textarea is empty
-        document.addEventListener('click', (event) => {
-            const isClickInside = postAndUploadContainer.contains(event.target);
+        closeNewPostButton.addEventListener('click', () => {
+            newPostPopup.classList.remove('visible');
+        });
 
-            if (!isClickInside) {
-                if (contentTextarea.value.trim() === '') {
-                    postAndUploadContainer.classList.remove('is-expanded');
-                    // Reset height when hiding
-                    contentTextarea.style.height = 'auto';
-                }
+        searchLink.addEventListener('click', (event) => {
+            event.preventDefault();
+            searchPopup.classList.add('visible');
+        });
+
+        closeSearchButton.addEventListener('click', () => {
+            searchPopup.classList.remove('visible');
+        });
+
+        window.addEventListener('click', (event) => {
+            if (event.target == newPostPopup) {
+                newPostPopup.classList.remove('visible');
+            } else if (event.target == searchPopup) {
+                searchPopup.classList.remove('visible');
             }
         });
 
-        // Auto-grow textarea on input
-        contentTextarea.addEventListener('input', autoGrowTextarea);
+        const posts = document.querySelectorAll('.post');
 
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, {
+            threshold: 0.1
+        });
+
+        posts.forEach(post => {
+            observer.observe(post);
+        });
+
+        // New Image Upload Logic (for inserting into textarea)
+        const contentTextarea = document.getElementById('content-textarea');
+        const insertImageButton = document.getElementById('insert-image-button');
+        const imageUploadInput = document.getElementById('image-upload-input');
+
+        insertImageButton.addEventListener('click', () => {
+            imageUploadInput.click();
+        });
+
+        imageUploadInput.addEventListener('change', async (event) => {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const formData = new FormData();
+            formData.append('file', file);
+
+            try {
+                const response = await fetch('/upload-image', {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await response.json();
+                if (data.image_url) {
+                    const imageUrl = data.image_url;
+                    const imageTag = `<img src="${imageUrl}" alt="${file.name}" class="inserted-image">`;
+                    
+                    const start = contentTextarea.selectionStart;
+                    const end = contentTextarea.selectionEnd;
+                    const text = contentTextarea.value;
+                    const newText = text.substring(0, start) + imageTag + text.substring(end);
+                    contentTextarea.value = newText;
+
+                    // Reset the input so the same file can be selected again
+                    imageUploadInput.value = '';
+                }
+            } catch (error) {
+                console.error('Error uploading image:', error);
+            }
+        });
+
+        // Original File Upload Logic (for creating new posts) - now inside popup
         const dropZone = document.getElementById('drop-zone');
         const fileInput = document.getElementById('file-input');
         const uploadProgress = document.getElementById('upload-progress');
 
-        dropZone.addEventListener('click', () => fileInput.click());
+        if (dropZone) { // Ensure dropZone exists before adding listeners
+            dropZone.addEventListener('click', () => fileInput.click());
 
-        dropZone.addEventListener('dragenter', (e) => {
-            e.preventDefault();
-            dropZone.classList.add('dragover');
-        });
+            dropZone.addEventListener('dragenter', (e) => {
+                e.preventDefault();
+                dropZone.classList.add('dragover');
+            });
 
-        dropZone.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            dropZone.classList.add('dragover');
-        });
+            dropZone.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                dropZone.classList.add('dragover');
+            });
 
-        dropZone.addEventListener('dragleave', (e) => {
-            e.preventDefault();
-            dropZone.classList.remove('dragover');
-        });
+            dropZone.addEventListener('dragleave', (e) => {
+                e.preventDefault();
+                dropZone.classList.remove('dragover');
+            });
 
-        dropZone.addEventListener('drop', (e) => {
-            e.preventDefault();
-            dropZone.classList.remove('dragover');
-            const files = e.dataTransfer.files;
-            handleFiles(files);
-        });
+            dropZone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                dropZone.classList.remove('dragover');
+                const files = e.dataTransfer.files;
+                handleFiles(files);
+            });
 
-        fileInput.addEventListener('change', (e) => {
-            const files = e.target.files;
-            handleFiles(files);
-        });
+            fileInput.addEventListener('change', (e) => {
+                const files = e.target.files;
+                handleFiles(files);
+            });
 
-        function handleFiles(files) {
-            for (const file of files) {
-                uploadFile(file);
+            function handleFiles(files) {
+                for (const file of files) {
+                    uploadFile(file);
+                }
+            }
+
+            function uploadFile(file) {
+                const formData = new FormData();
+                formData.append('file', file);
+
+                fetch('/upload', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(() => {
+                    window.location.reload();
+                })
+                .catch(error => {
+                    console.error('Error uploading file:', error);
+                });
             }
         }
 
-        function uploadFile(file) {
-            const formData = new FormData();
-            formData.append('file', file);
-
-            fetch('/upload', {
-                method: 'POST',
-                body: formData
-            })
-            .then(() => {
-                window.location.reload();
-            })
-            .catch(error => {
-                console.error('Error uploading file:', error);
-            });
-        }
+        // Staggered navigation link fade-in
+        const navItems = document.querySelectorAll('.nav-item');
+        navItems.forEach((item, index) => {
+            item.style.opacity = 0;
+            item.style.transform = 'translateY(10px)';
+            setTimeout(() => {
+                item.style.transition = 'opacity 0.5s ease-out, transform 0.5s ease-out';
+                item.style.opacity = 1;
+                item.style.transform = 'translateY(0)';
+            }, index * 100); // Stagger by 100ms
+        });
     });
 </script>
 
