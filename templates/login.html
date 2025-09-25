@@ -1,12 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!--
+    //--------------------------------------------------------------------------------
+    //                                  HEAD & METADATA
+    //--------------------------------------------------------------------------------
+    -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - ASLAN</title>
     <link rel="icon" href="{{ url_for('static', filename='images/bloglogo2.png') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    
+    <!--
+    //--------------------------------------------------------------------------------
+    //                                  INLINE STYLES
+    //--------------------------------------------------------------------------------
+    -->
     <style>
+        /* General Body Layout */
         body {
             display: flex;
             flex-direction: column;
@@ -15,6 +27,8 @@
             min-height: 100vh;
             background-color: #ffffff;
         }
+
+        /* Logo Styling */
         .login-logo {
             margin-bottom: 20px;
         }
@@ -22,6 +36,8 @@
             width: 150px; /* Adjust size as needed */
             height: auto;
         }
+
+        /* Login Container Styling */
         .login-container {
             background-color: #fefefe;
             padding: 30px;
@@ -37,6 +53,8 @@
             margin-bottom: 20px;
             font-size: 24px;
         }
+
+        /* Input Field Styling */
         .login-container input[type="text"],
         .login-container input[type="password"] {
             width: calc(100% - 30px);
@@ -47,6 +65,8 @@
             font-size: 16px;
             box-sizing: border-box;
         }
+
+        /* Button Styling */
         .login-container button {
             width: 150px; /* Smaller width */
             padding: 10px 15px; /* Smaller padding */
@@ -61,6 +81,8 @@
         .login-container button:hover {
             background-color: #52b830;
         }
+
+        /* Error Message Styling */
         .login-container .error-message {
             color: red;
             margin-top: 10px;
@@ -69,6 +91,11 @@
 </head>
 
 <body>
+    <!--
+    //--------------------------------------------------------------------------------
+    //                                     LOGIN FORM
+    //--------------------------------------------------------------------------------
+    -->
     <div class="login-logo">
         <img src="{{ url_for('static', filename='images/bloglogo2.png') }}" alt="ASLAN Logo">
     </div>

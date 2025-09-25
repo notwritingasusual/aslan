@@ -1,5 +1,11 @@
+/*--------------------------------------------------------------------------------*/
+/*                                 IMPORTS & DEFAULTS                             */
+/*--------------------------------------------------------------------------------*/
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
+/*--------------------------------------------------------------------------------*/
+/*                                  GENERAL STYLES                                */
+/*--------------------------------------------------------------------------------*/
 body {
     background-color: #ffffff;
     color: #000000;
@@ -13,6 +19,9 @@ body {
     display: flex;
 }
 
+/*--------------------------------------------------------------------------------*/
+/*                                 SIDEBAR & NAV                                  */
+/*--------------------------------------------------------------------------------*/
 .sidebar {
     width: 150px;
     background-color: #ffffff;
@@ -58,12 +67,18 @@ body {
     transform: translateY(10px);
 }
 
+/*--------------------------------------------------------------------------------*/
+/*                                  MAIN CONTENT                                  */
+/*--------------------------------------------------------------------------------*/
 main {
     flex-grow: 1;
     padding: 20px;
     margin-left: 170px;
 }
 
+/*--------------------------------------------------------------------------------*/
+/*                                 POPUP & MODAL                                  */
+/*--------------------------------------------------------------------------------*/
 .post-form-popup {
     display: none;
     position: fixed;
@@ -127,6 +142,46 @@ main {
     cursor: pointer;
 }
 
+#image-popup {
+    display: none;
+    position: fixed;
+    z-index: 2; /* Higher z-index to appear above other popups */
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.8); /* Darker background */
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+    text-align: center;
+}
+
+#image-popup.visible {
+    opacity: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.image-popup-content {
+    max-width: 90%;
+    max-height: 90%;
+}
+
+#image-popup .close-button {
+    position: absolute;
+    top: 15px;
+    right: 35px;
+    color: #f1f1f1;
+    font-size: 40px;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+/*--------------------------------------------------------------------------------*/
+/*                                  FORM STYLES                                   */
+/*--------------------------------------------------------------------------------*/
 .post-form form,
 .search-form-section form {
     display: flex;
@@ -173,6 +228,9 @@ main {
     font-weight: bold;
 }
 
+/*--------------------------------------------------------------------------------*/
+/*                                  POST STYLES                                   */
+/*--------------------------------------------------------------------------------*/
 .posts {
     max-width: 800px;
     margin: 0 auto;
@@ -216,11 +274,27 @@ main {
     border: 0.5px solid #ccc;
 }
 
+.post-image {
+    max-width: 50%;
+    height: auto;
+    display: block;
+    margin: 10px auto;
+    border-radius: 5px;
+    border: 0.5px solid #ccc;
+    cursor: pointer;
+}
+
+/*--------------------------------------------------------------------------------*/
+/*                                  HELPER CLASSES                                */
+/*--------------------------------------------------------------------------------*/
 .highlight {
     color: #62d840;
     font-weight: bold;
 }
 
+/*--------------------------------------------------------------------------------*/
+/*                                 DROPZONE STYLES                                */
+/*--------------------------------------------------------------------------------*/
 .dropzone-section {
     margin-top: 15px; /* Adjusted margin for inside popup */
     text-align: center;

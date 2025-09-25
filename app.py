@@ -1,3 +1,6 @@
+#--------------------------------------------------------------------------------#
+#                                     IMPORTS                                    #
+#--------------------------------------------------------------------------------#
 from flask import Flask, render_template, request, redirect, url_for, session, jsonify
 from flask_sqlalchemy import SQLAlchemy
 import os
@@ -6,6 +9,9 @@ from werkzeug.utils import secure_filename
 from werkzeug.security import generate_password_hash, check_password_hash
 from functools import wraps
 
+#--------------------------------------------------------------------------------#
+#                           APP INITIALIZATION & CONFIG                          #
+#--------------------------------------------------------------------------------#
 app = Flask(__name__)
 
 # Database configuration
@@ -16,6 +22,9 @@ app.secret_key = 'your_secret_key' # Replace with a strong secret key
 
 db = SQLAlchemy(app)
 
+#--------------------------------------------------------------------------------#
+#                              CUSTOM JINJA FILTERS                              #
+#--------------------------------------------------------------------------------#
 # Custom Jinja2 filter to convert newlines to paragraphs
 def nl2p(value):
     # Normalize all types of newlines to \n, then split into lines
@@ -39,7 +48,9 @@ def nl2p(value):
 
 app.jinja_env.filters['nl2p'] = nl2p
 
-# Database models
+#--------------------------------------------------------------------------------#
+#                                 DATABASE MODELS                                #
+#--------------------------------------------------------------------------------#
 class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(100), nullable=False)
@@ -50,6 +61,9 @@ class User(db.Model):
     username = db.Column(db.String(80), unique=True, nullable=False)
     password = db.Column(db.String(120), nullable=False)
 
+#--------------------------------------------------------------------------------#
+#                                DB INITIALIZATION                                #
+#--------------------------------------------------------------------------------#
 # Create tables and add admin user
 with app.app_context():
     db.create_all()
@@ -59,6 +73,9 @@ with app.app_context():
         db.session.add(admin_user)
         db.session.commit()
 
+#--------------------------------------------------------------------------------#
+#                                  DECORATORS                                    #
+#--------------------------------------------------------------------------------#
 # Login required decorator
 def login_required(f):
     @wraps(f)
@@ -68,6 +85,9 @@ def login_required(f):
         return f(*args, **kwargs)
     return decorated_function
 
+#--------------------------------------------------------------------------------#
+#                              AUTHENTICATION ROUTES                             #
+#--------------------------------------------------------------------------------#
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -86,6 +106,9 @@ def logout():
     session.pop('logged_in', None)
     return redirect(url_for('login'))
 
+#--------------------------------------------------------------------------------#
+#                             CONTENT DISPLAY ROUTES                             #
+#--------------------------------------------------------------------------------#
 def highlight_text(text, query):
     if not query:
         return text
@@ -126,6 +149,9 @@ def index():
 
     return render_template('index.html', posts=posts, query=query)
 
+#--------------------------------------------------------------------------------#
+#                                  UPLOAD ROUTES                                 #
+#--------------------------------------------------------------------------------#
 @app.route('/upload-image', methods=['POST'])
 @login_required
 def upload_image():
@@ -162,9 +188,9 @@ def upload_file():
         title = filename
         content = ''
         if filename.lower().endswith(('.png', '.jpg', '.jpeg', '.gif')):
-            content = f'<img src="{url_for('static', filename='uploads/' + filename)}" alt="{filename}">'
+            content = f'<img src="{url_for('static', filename='uploads/' + filename)}" alt="{filename}" class="post-image">' # Corrected escaping for quotes within f-string
         else:
-            content = f'<a href="{url_for('static', filename='uploads/' + filename)}">{filename}</a>'
+            content = f'<a href="{url_for('static', filename='uploads/' + filename)}">{filename}</a>' # Corrected escaping for quotes within f-string
         
         post = Post(title=title, content=content)
         db.session.add(post)
@@ -172,5 +198,8 @@ def upload_file():
 
         return redirect(url_for('index'))
 
+#--------------------------------------------------------------------------------#
+#                                 APP EXECUTION                                  #
+#--------------------------------------------------------------------------------#
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, port=5001)

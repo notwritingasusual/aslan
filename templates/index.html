@@ -1,6 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!--
+    //--------------------------------------------------------------------------------
+    //                                  HEAD & METADATA
+    //--------------------------------------------------------------------------------
+    -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ASLAN</title>
@@ -11,33 +16,47 @@
 <body>
 
 <div class="container">
+    <!--
+    //--------------------------------------------------------------------------------
+    //                                  SIDEBAR & NAV
+    //--------------------------------------------------------------------------------
+    -->
     <nav class="sidebar">
         <div class="logo">
             <img src="{{ url_for('static', filename='images/bloglogo2.png') }}" alt="Company Logo">
         </div>
         <ul class="menu">
-            <li class="nav-item"><a href="/">Posts</a></li>
-            <li class="nav-item"><a href="#" id="new-post-link">New Post</a></li>
+            <li class="nav-item"><a href="/">Feed</a></li>
+            <li class="nav-item"><a href="#" id="new-post-link">New</a></li>
             <li class="nav-item"><a href="#" id="search-link">Search</a></li>
             <li class="nav-item"><a href="/logout">Logout</a></li>
         </ul>
     </nav>
 
+    <!--
+    //--------------------------------------------------------------------------------
+    //                                  MAIN CONTENT
+    //--------------------------------------------------------------------------------
+    -->
     <main>
-        <!-- New Post Form Popup -->
+        <!--
+        //--------------------------------------------------------------------------------
+        //                               NEW POST POPUP
+        //--------------------------------------------------------------------------------
+        -->
         <div id="new-post-popup" class="post-form-popup">
             <div class="post-form-content">
                 <span class="close-button" id="close-new-post">&times;</span>
                 <section class="post-form">
                     <form method="POST" action="/" autocomplete="off" id="post-form-container">
-                        <input type="text" id="title-input" name="title" placeholder="New Post" required aria-label="Post Title">
+                        <input type="text" id="title-input" name="title" placeholder="Title" required aria-label="Post Title">
                         <textarea name="content" id="content-textarea" placeholder="Content" rows="3" required aria-label="Post Content"></textarea>
 
                         <!-- Upload File Section (moved inside popup) -->
                         <section class="dropzone-section">
                             <h2>Upload Files</h2>
                             <div id="drop-zone">
-                                <p>Drag & drop files here or click to select</p>
+                                <p>Drag & Drop</p>
                                 <input type="file" id="file-input" multiple style="display: none;">
                             </div>
                             <div id="upload-progress"></div>
@@ -51,20 +70,28 @@
             </div>
         </div>
 
-        <!-- Search Popup -->
+        <!--
+        //--------------------------------------------------------------------------------
+        //                                 SEARCH POPUP
+        //--------------------------------------------------------------------------------
+        -->
         <div id="search-popup" class="post-form-popup">
             <div class="search-popup-content">
                 <span class="close-button" id="close-search">&times;</span>
                 <section class="search-form-section">
                     <form method="get" action="/" autocomplete="off" class="search-form">
-                        <input type="text" name="q" placeholder="Search posts..." value="{{ query }}" aria-label="Search posts">
+                        <input type="text" name="q" placeholder="Search" value="{{ query }}" aria-label="Search posts">
                         <button type="submit">Search</button>
                     </form>
                 </section>
             </div>
         </div>
 
-        <!-- Display Posts to user -->
+        <!--
+        //--------------------------------------------------------------------------------
+        //                                DISPLAY POSTS
+        //--------------------------------------------------------------------------------
+        -->
         <section class="posts">
             {% if posts %}
                 {% for post in posts %}
@@ -77,12 +104,31 @@
                 <p>No posts found.</p>
             {% endif %}
         </section>
+
+        <!--
+        //--------------------------------------------------------------------------------
+        //                                 IMAGE POPUP
+        //--------------------------------------------------------------------------------
+        -->
+        <div id="image-popup" class="post-form-popup">
+            <span class="close-button" id="close-image-popup">&times;</span>
+            <img class="image-popup-content" id="popup-image">
+        </div>
     </main>
 </div>
 
-<!--Scripts-->
+<!--
+//--------------------------------------------------------------------------------
+//                                     SCRIPTS
+//--------------------------------------------------------------------------------
+-->
 <script>
     document.addEventListener('DOMContentLoaded', () => {
+        /*
+        * -------------------
+        *  POPUP VISIBILITY
+        * -------------------
+        */
         const newPostLink = document.getElementById('new-post-link');
         const newPostPopup = document.getElementById('new-post-popup');
         const closeNewPostButton = document.getElementById('close-new-post');
@@ -117,6 +163,11 @@
             }
         });
 
+        /*
+        * -------------------
+        *  POST ANIMATIONS
+        * -------------------
+        */
         const posts = document.querySelectorAll('.post');
 
         const observer = new IntersectionObserver((entries) => {
@@ -133,7 +184,11 @@
             observer.observe(post);
         });
 
-        // New Image Upload Logic (for inserting into textarea)
+        /*
+        * -------------------
+        *  IMAGE UPLOADS
+        * -------------------
+        */
         const contentTextarea = document.getElementById('content-textarea');
         const insertImageButton = document.getElementById('insert-image-button');
         const imageUploadInput = document.getElementById('image-upload-input');
@@ -157,7 +212,7 @@
                 const data = await response.json();
                 if (data.image_url) {
                     const imageUrl = data.image_url;
-                    const imageTag = `<img src="${imageUrl}" alt="${file.name}" class="inserted-image">`;
+                    const imageTag = `<img src="${imageUrl}" alt="${file.name}" class="post-image">`;
                     
                     const start = contentTextarea.selectionStart;
                     const end = contentTextarea.selectionEnd;
@@ -173,7 +228,11 @@
             }
         });
 
-        // Original File Upload Logic (for creating new posts) - now inside popup
+        /*
+        * -------------------
+        *  FILE DROPZONE
+        * -------------------
+        */
         const dropZone = document.getElementById('drop-zone');
         const fileInput = document.getElementById('file-input');
         const uploadProgress = document.getElementById('upload-progress');
@@ -231,7 +290,11 @@
             }
         }
 
-        // Staggered navigation link fade-in
+        /*
+        * -------------------
+        *  NAV ANIMATIONS
+        * -------------------
+        */
         const navItems = document.querySelectorAll('.nav-item');
         navItems.forEach((item, index) => {
             item.style.opacity = 0;
@@ -241,6 +304,34 @@
                 item.style.opacity = 1;
                 item.style.transform = 'translateY(0)';
             }, index * 100); // Stagger by 100ms
+        });
+
+        /*
+        * -------------------
+        *  IMAGE POPUP
+        * -------------------
+        */
+        const imagePopup = document.getElementById('image-popup');
+        const popupImage = document.getElementById('popup-image');
+        const closeImagePopup = document.getElementById('close-image-popup');
+
+        document.querySelectorAll('.post-content').forEach(content => {
+            content.addEventListener('click', (event) => {
+                if (event.target.classList.contains('post-image')) {
+                    imagePopup.classList.add('visible');
+                    popupImage.src = event.target.src;
+                }
+            });
+        });
+
+        closeImagePopup.addEventListener('click', () => {
+            imagePopup.classList.remove('visible');
+        });
+
+        imagePopup.addEventListener('click', (event) => {
+            if (event.target === imagePopup) {
+                imagePopup.classList.remove('visible');
+            }
         });
     });
 </script>
