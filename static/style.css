@@ -41,7 +41,8 @@ body {
 .menu {
     list-style: none;
     padding: 0;
-    margin: 0;
+    margin: 20px auto 0 auto; /* Center the menu horizontally */
+    width: fit-content; /* Allow the menu to shrink to content width */
 }
 
 .menu li {
@@ -55,11 +56,15 @@ body {
     font-weight: 400;
     padding: 5px 0;
     display: block;
+    transition: font-size 0.2s ease-in-out, font-weight 0.2s ease-in-out;
 }
 
 .menu a:hover {
-    background-color: #f0f0f0;
-    border-radius: 3px;
+    font-weight: bold;
+}
+
+.active-link {
+    text-decoration: underline;
 }
 
 .welcome-message {
@@ -91,7 +96,7 @@ main {
     background-image: url('images/bloglogo2.png');
     background-repeat: no-repeat;
     background-attachment: fixed;
-    background-position: center;
+    background-position: 60% center;
     background-size: 50%;
     opacity: 0.3;
     top: 0;
@@ -370,8 +375,8 @@ main {
 }
 
 .edit-post-link {
-    top: 10px;
-    right: 60px;
+    bottom: 10px;
+    left: 10px;
 }
 
 .delete-post-link {
@@ -386,4 +391,28 @@ main {
     margin: 10px auto;
     border-radius: 5px;
     border: 0.5px solid #ccc;
+}
+
+#new-post-bottom-right-link {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #62d840;
+    color: #ffffff;
+    font-size: 24px;
+    font-weight: bold;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+    z-index: 1000;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.3s ease;
+}
+
+#new-post-bottom-right-link:hover {
+    background-color: #4CAF50;
 }

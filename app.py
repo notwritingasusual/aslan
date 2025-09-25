@@ -147,7 +147,22 @@ def index():
     else:
         posts = Post.query.order_by(Post.id.desc()).all()
 
-    return render_template('index.html', posts=posts, query=query, username=username)
+    return render_template('index.html', posts=posts, query=query, username=username, current_route='index')
+
+@app.route('/images')
+@login_required
+def images_feed():
+    username = session.get('username')
+    posts = Post.query.filter(Post.content.ilike('%<img src="%')).order_by(Post.id.desc()).all()
+    return render_template('index.html', posts=posts, username=username, current_route='images')
+
+@app.route('/files')
+@login_required
+def files_feed():
+    username = session.get('username')
+    posts = Post.query.filter(Post.content.ilike('%<a href="%')).order_by(Post.id.desc()).all()
+    return render_template('index.html', posts=posts, username=username, current_route='files')
+    return render_template('index.html', posts=posts, username=username)
 
 #--------------------------------------------------------------------------------#
 #                                  UPLOAD ROUTES                                 #
