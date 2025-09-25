@@ -14,7 +14,7 @@
 </head>
 
 <body>
-
+<div class="background-image"></div>
 <div class="container">
     <!--
     //--------------------------------------------------------------------------------
@@ -23,8 +23,13 @@
     -->
     <nav class="sidebar">
         <div class="logo">
-            <img src="{{ url_for('static', filename='images/bloglogo2.png') }}" alt="Company Logo">
+            <a href="/"><img src="{{ url_for('static', filename='images/bloglogo2.png') }}" alt="Blog Logo"></a>
         </div>
+        {% if session.username %}
+        <div class="welcome-message">
+            Welcome, {{ session.username }}
+        </div>
+        {% endif %}
         <ul class="menu">
             <li class="nav-item"><a href="/">Feed</a></li>
             <li class="nav-item"><a href="#" id="new-post-link">New</a></li>
@@ -72,6 +77,25 @@
 
         <!--
         //--------------------------------------------------------------------------------
+        //                               EDIT POST POPUP
+        //--------------------------------------------------------------------------------
+        -->
+        <div id="edit-post-popup" class="post-form-popup">
+            <div class="post-form-content">
+                <span class="close-button" id="close-edit-post">&times;</span>
+                <section class="post-form">
+                    <form method="POST" action="" autocomplete="off" id="edit-form-container">
+                        <input type="hidden" id="edit-post-id" name="post_id">
+                        <input type="text" id="edit-title-input" name="title" placeholder="Title" required aria-label="Post Title">
+                        <textarea name="content" id="edit-content-textarea" placeholder="Content" rows="3" required aria-label="Post Content"></textarea>
+                        <button type="submit">Update Post</button>
+                    </form>
+                </section>
+            </div>
+        </div>
+
+        <!--
+        //--------------------------------------------------------------------------------
         //                                 SEARCH POPUP
         //--------------------------------------------------------------------------------
         -->
@@ -98,6 +122,8 @@
                     <div class="post">
                         <h2>{{ post.title }}</h2>
                         <div class="post-content">{{ post.content | nl2p | safe }}</div>
+                        <a href="/edit/{{ post.id }}" class="edit-post-link">Edit</a>
+                        <a href="/delete/{{ post.id }}" class="delete-post-link" onclick="return confirm('Are you sure you want to delete this post?')">Delete</a>
                     </div>
                 {% endfor %}
             {% else %}
@@ -160,7 +186,42 @@
                 newPostPopup.classList.remove('visible');
             } else if (event.target == searchPopup) {
                 searchPopup.classList.remove('visible');
+            } else if (event.target == editPostPopup) {
+                editPostPopup.classList.remove('visible');
             }
+        });
+
+        /*
+        * -------------------
+        *  EDIT POST POPUP
+        * -------------------
+        */
+        const editPostPopup = document.getElementById('edit-post-popup');
+        const closeEditPostButton = document.getElementById('close-edit-post');
+        const editForm = document.getElementById('edit-form-container');
+        const editPostId = document.getElementById('edit-post-id');
+        const editTitleInput = document.getElementById('edit-title-input');
+        const editContentTextarea = document.getElementById('edit-content-textarea');
+
+        document.querySelectorAll('.edit-post-link').forEach(link => {
+            link.addEventListener('click', async (event) => {
+                event.preventDefault();
+                const postId = link.getAttribute('href').split('/').pop();
+                
+                const response = await fetch(`/edit/${postId}`);
+                const post = await response.json();
+
+                editPostId.value = post.id;
+                editTitleInput.value = post.title;
+                editContentTextarea.value = post.content;
+                editForm.action = `/edit/${post.id}`;
+
+                editPostPopup.classList.add('visible');
+            });
+        });
+
+        closeEditPostButton.addEventListener('click', () => {
+            editPostPopup.classList.remove('visible');
         });
 
         /*
@@ -236,6 +297,7 @@
         const dropZone = document.getElementById('drop-zone');
         const fileInput = document.getElementById('file-input');
         const uploadProgress = document.getElementById('upload-progress');
+        let droppedFile = null; // Variable to store the dropped file
 
         if (dropZone) { // Ensure dropZone exists before adding listeners
             dropZone.addEventListener('click', () => fileInput.click());
@@ -267,28 +329,58 @@
                 handleFiles(files);
             });
 
-            function handleFiles(files) {
-                for (const file of files) {
-                    uploadFile(file);
+            async function handleFiles(files) {
+                if (files.length > 0) {
+                    const file = files[0];
+                    const titleInput = document.getElementById('title-input');
+                    const contentTextarea = document.getElementById('content-textarea');
+                    
+                    titleInput.value = file.name;
+
+                    const formData = new FormData();
+                    formData.append('file', file);
+
+                    try {
+                        const response = await fetch('/upload-file', {
+                            method: 'POST',
+                            body: formData
+                        });
+                        const data = await response.json();
+                        if (data.file_url) {
+                            const permanentFileUrl = data.file_url;
+                            if (data.is_image) {
+                                contentTextarea.value = `Image ready for upload: ${file.name}\n\n<img src="${permanentFileUrl}" alt="${file.name}" class="post-image-preview">`;
+                            } else {
+                                contentTextarea.value = `File ready for upload: ${file.name}\n\n<a href="${permanentFileUrl}">${file.name}</a>`;
+                            }
+                        } else {
+                            console.error('Error uploading file: No file_url received');
+                        }
+                    } catch (error) {
+                        console.error('Error uploading file:', error);
+                    }
                 }
             }
-
-            function uploadFile(file) {
-                const formData = new FormData();
-                formData.append('file', file);
-
-                fetch('/upload', {
-                    method: 'POST',
-                    body: formData
-                })
-                .then(() => {
-                    window.location.reload();
-                })
-                .catch(error => {
-                    console.error('Error uploading file:', error);
-                });
-            }
         }
+
+        const postForm = document.getElementById('post-form-container');
+        postForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+
+            const formData = new FormData(postForm);
+            // No need to append droppedFile here, as it's already uploaded in handleFiles
+
+            const response = await fetch('/', {
+                method: 'POST',
+                body: formData
+            });
+
+            if (response.ok) {
+                window.location.reload();
+            } else {
+                console.error('Error creating post');
+            }
+        });
 
         /*
         * -------------------

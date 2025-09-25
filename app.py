@@ -96,6 +96,7 @@ def login():
         user = User.query.filter_by(username=username).first()
         if user and check_password_hash(user.password, password):
             session['logged_in'] = True
+            session['username'] = username
             return redirect(url_for('index'))
         else:
             return render_template('login.html', error='Invalid credentials')
@@ -119,10 +120,9 @@ def highlight_text(text, query):
     return re.sub(f'({escaped_query})', r'<span class="highlight">\1</span>', text, flags=re.IGNORECASE)
 
 @app.route('/', methods=['GET', 'POST'])
+@login_required
 def index():
-    if 'logged_in' not in session:
-        return redirect(url_for('login'))
-
+    username = session.get('username')
     if request.method == 'POST':
         title = request.form.get('title')
         content = request.form.get('content')
@@ -147,14 +147,14 @@ def index():
     else:
         posts = Post.query.order_by(Post.id.desc()).all()
 
-    return render_template('index.html', posts=posts, query=query)
+    return render_template('index.html', posts=posts, query=query, username=username)
 
 #--------------------------------------------------------------------------------#
 #                                  UPLOAD ROUTES                                 #
 #--------------------------------------------------------------------------------#
-@app.route('/upload-image', methods=['POST'])
+@app.route('/upload-file', methods=['POST'])
 @login_required
-def upload_image():
+def upload_file():
     if 'file' not in request.files:
         return jsonify({'error': 'No file part'}), 400
     file = request.files['file']
@@ -167,39 +167,32 @@ def upload_image():
             os.makedirs(upload_folder)
         file_path = os.path.join(upload_folder, filename)
         file.save(file_path)
-        image_url = url_for('static', filename=f'uploads/{filename}')
-        return jsonify({'image_url': image_url})
+        file_url = url_for('static', filename=f'uploads/{filename}')
+        is_image = filename.lower().endswith(('.png', '.jpg', '.jpeg', '.gif'))
+        return jsonify({'file_url': file_url, 'is_image': is_image})
     return jsonify({'error': 'Something went wrong'}), 500
 
-@app.route('/upload', methods=['POST'])
+@app.route('/edit/<int:post_id>', methods=['GET', 'POST'])
 @login_required
-def upload_file():
-    if 'file' not in request.files:
-        return redirect(request.url)
-    file = request.files['file']
-    if file.filename == '':
-        return redirect(request.url)
-    if file:
-        filename = secure_filename(file.filename)
-        file_path = os.path.join('static/uploads', filename)
-        file.save(os.path.join(basedir, file_path))
-
-        # Create a new post for the uploaded file
-        title = filename
-        content = ''
-        if filename.lower().endswith(('.png', '.jpg', '.jpeg', '.gif')):
-            content = f'<img src="{url_for('static', filename='uploads/' + filename)}" alt="{filename}" class="post-image">' # Corrected escaping for quotes within f-string
-        else:
-            content = f'<a href="{url_for('static', filename='uploads/' + filename)}">{filename}</a>' # Corrected escaping for quotes within f-string
-        
-        post = Post(title=title, content=content)
-        db.session.add(post)
+def edit_post(post_id):
+    post = Post.query.get_or_404(post_id)
+    if request.method == 'POST':
+        post.title = request.form['title']
+        post.content = request.form['content']
         db.session.commit()
-
         return redirect(url_for('index'))
+    return jsonify({'id': post.id, 'title': post.title, 'content': post.content})
+
+@app.route('/delete/<int:post_id>')
+@login_required
+def delete_post(post_id):
+    post = Post.query.get_or_404(post_id)
+    db.session.delete(post)
+    db.session.commit()
+    return redirect(url_for('index'))
 
 #--------------------------------------------------------------------------------#
 #                                 APP EXECUTION                                  #
 #--------------------------------------------------------------------------------#
 if __name__ == '__main__':
-    app.run(debug=True, port=5001)
+    app.run(debug=True, port=5000)
