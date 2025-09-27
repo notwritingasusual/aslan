@@ -23,7 +23,7 @@ body {
 /*                                 SIDEBAR & NAV                                  */
 /*--------------------------------------------------------------------------------*/
 .sidebar {
-    width: 150px;
+    width: 100px; /* Adjusted for smaller icons */
     background-color: #ffffff;
     border-right: 0.5px solid #000000;
     padding: 20px;
@@ -33,7 +33,7 @@ body {
 }
 
 .logo img {
-    width: 100px;
+    width: 60px; /* Adjusted logo size */
     height: auto;
     margin-bottom: 20px;
 }
@@ -46,10 +46,66 @@ body {
 }
 
 .menu li {
-    margin-bottom: 5px;
+    margin-bottom: 5px; /* Reduced spacing */
 }
 
 .menu a {
+    display: block;
+    transition: transform 0.2s ease-in-out;
+}
+
+.menu a:hover {
+    transform: scale(1.1);
+}
+
+.menu img {
+    height: 30px; /* Set height only to maintain aspect ratio */
+    width: auto;
+}
+
+.active-link {
+    /* Style for active link if needed, e.g., a border */
+}
+
+.welcome-container {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.welcome-message {
+    color: #62d840;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 400;
+    display: inline-block; /* To center it properly */
+}
+
+.nav-item {
+    opacity: 0;
+    transform: translateY(10px);
+}
+
+/*--------------------------------------------------------------------------------*/
+/*                                 RECENT POSTS                                 */
+/*--------------------------------------------------------------------------------*/
+.recent-posts-container {
+    margin-top: 20px;
+}
+
+.recent-posts-container h3 {
+    font-size: 16px;
+    font-weight: 500;
+    color: #333333;
+    margin-bottom: 10px;
+}
+
+.recent-posts {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.recent-posts li a {
     color: #333333;
     text-decoration: none;
     font-size: 14px;
@@ -59,28 +115,8 @@ body {
     transition: font-size 0.2s ease-in-out, font-weight 0.2s ease-in-out;
 }
 
-.menu a:hover {
+.recent-posts li a:hover {
     font-weight: bold;
-}
-
-.active-link {
-    text-decoration: underline;
-}
-
-.welcome-message {
-    color: #62d840;
-    text-decoration: none;
-    font-size: 14px;
-    font-weight: 400;
-    padding: 5px 0;
-    display: block;
-    margin-top: 10px;
-    margin-bottom: 10px;
-}
-
-.nav-item {
-    opacity: 0;
-    transform: translateY(10px);
 }
 
 /*--------------------------------------------------------------------------------*/
@@ -89,7 +125,7 @@ body {
 main {
     flex-grow: 1;
     padding: 20px;
-    margin-left: 170px;
+    margin-left: 120px; /* Adjusted for new sidebar width */
 }
 
 /*-------------------------------------- TRANSPARENT BACKGROUND IMAGE ------------------------------------------*/
@@ -101,11 +137,7 @@ main {
     background-size: 50%;
     opacity: 0.3;
     top: 0;
-    left: 170px; /* sidebar width */
-    bottom: 0;
-    right: 0;
-    position: fixed;
-    z-index: -1;
+    left: 120px; /* Adjusted for new sidebar width */
 }
 
 /*--------------------------------------------------------------------------------*/
@@ -395,98 +427,7 @@ main {
     border: 0.5px solid #ccc;
 }
 
-.color-navigation-container {
-    display: flex;
-    gap: 5px;
-}
 
-.color-nav-box {
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    cursor: pointer;
-    border: 1px solid rgba(0, 0, 0, 0.2);
-    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
-    transition: transform 0.2s ease;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-decoration: none;
-    position: relative; /* Needed for absolute positioning of tooltip */
-}
-
-.color-nav-box:hover {
-    transform: scale(1.1);
-}
-
-.color-nav-box .tooltip-text {
-    visibility: hidden;
-    width: 80px; /* Adjust as needed */
-    background-color: #555;
-    color: #fff;
-    text-align: center;
-    border-radius: 6px;
-    padding: 5px 0;
-    position: absolute;
-    z-index: 1;
-    bottom: 125%; /* Position the tooltip above the color box */
-    left: 50%;
-    margin-left: -40px; /* Half of width */
-    opacity: 0;
-    transition: opacity 0.3s;
-    font-size: 12px;
-}
-
-.color-nav-box .tooltip-text::after {
-    content: "";
-    position: absolute;
-    top: 100%;
-    left: 50%;
-    margin-left: -5px;
-    border-width: 5px;
-    border-style: solid;
-    border-color: #555 transparent transparent transparent;
-}
-
-.color-nav-box:hover .tooltip-text {
-    visibility: visible;
-    opacity: 1;
-}
-
-.color-nav-box.red { background-color: red; }
-.color-nav-box.blue { background-color: blue; }
-.color-nav-box.orange { background-color: orange; }
-.color-nav-box.olive-green { background-color: olive; }
-
-.bottom-right-controls {
-    position: fixed;
-    bottom: 20px;
-    left: 20px;
-    display: flex;
-    gap: 10px;
-    z-index: 1000;
-}
-
-.color-tags {
-    position: absolute;
-    bottom: 10px;
-    right: 10px;
-    display: flex;
-    gap: 5px;
-}
-
-.color-box {
-    width: 10px;
-    height: 10px;
-    border-radius: 4px;
-    cursor: pointer;
-    border: 1px solid rgba(0, 0, 0, 0.2);
-}
-
-.color-box.red { background-color: red; }
-.color-box.blue { background-color: blue; }
-.color-box.orange { background-color: orange; }
-.color-box.olive-green { background-color: olive; }
 
 #new-post-bottom-right-link {
     position: fixed;
