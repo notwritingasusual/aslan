@@ -36,6 +36,7 @@ body {
     width: 100px;
     height: auto;
     margin-bottom: 20px;
+    opacity: 0.8;
 }
 
 .menu {
@@ -67,20 +68,28 @@ body {
     text-decoration: underline;
 }
 
-.welcome-message {
-    color: #62d840;
-    text-decoration: none;
-    font-size: 14px;
-    font-weight: 400;
-    padding: 5px 0;
-    display: block;
-    margin-top: 10px;
-    margin-bottom: 10px;
-}
+
 
 .nav-item {
     opacity: 0;
     transform: translateY(10px);
+}
+
+/* Style for Feather Icons */
+.menu svg {
+    width: 20px; /* Adjust size as needed */
+    height: 20px; /* Adjust size as needed */
+    stroke: #595959; /* Icon color */
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    fill: none;
+    vertical-align: middle; /* Align icon with text if any */
+    margin-right: 5px; /* Space between icon and text if any */
+}
+
+.menu a:hover svg {
+    stroke: #000000; /* Darker color on hover */
 }
 
 /*--------------------------------------------------------------------------------*/
@@ -285,7 +294,7 @@ main {
 }
 
 .posts .post h2 {
-    color: #62d840;
+    color: #0d0e0d;
     margin-top: 0;
     font-size: 18px;
     font-weight: 400; /* Thinner font weight */
@@ -395,69 +404,6 @@ main {
     border: 0.5px solid #ccc;
 }
 
-.color-navigation-container {
-    display: flex;
-    gap: 5px;
-}
-
-.color-nav-box {
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    cursor: pointer;
-    border: 1px solid rgba(0, 0, 0, 0.2);
-    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
-    transition: transform 0.2s ease;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-decoration: none;
-    position: relative; /* Needed for absolute positioning of tooltip */
-}
-
-.color-nav-box:hover {
-    transform: scale(1.1);
-}
-
-.color-nav-box .tooltip-text {
-    visibility: hidden;
-    width: 80px; /* Adjust as needed */
-    background-color: #555;
-    color: #fff;
-    text-align: center;
-    border-radius: 6px;
-    padding: 5px 0;
-    position: absolute;
-    z-index: 1;
-    bottom: 125%; /* Position the tooltip above the color box */
-    left: 50%;
-    margin-left: -40px; /* Half of width */
-    opacity: 0;
-    transition: opacity 0.3s;
-    font-size: 12px;
-}
-
-.color-nav-box .tooltip-text::after {
-    content: "";
-    position: absolute;
-    top: 100%;
-    left: 50%;
-    margin-left: -5px;
-    border-width: 5px;
-    border-style: solid;
-    border-color: #555 transparent transparent transparent;
-}
-
-.color-nav-box:hover .tooltip-text {
-    visibility: visible;
-    opacity: 1;
-}
-
-.color-nav-box.red { background-color: red; }
-.color-nav-box.blue { background-color: blue; }
-.color-nav-box.orange { background-color: orange; }
-.color-nav-box.olive-green { background-color: olive; }
-
 .bottom-right-controls {
     position: fixed;
     bottom: 20px;
@@ -465,49 +411,4 @@ main {
     display: flex;
     gap: 10px;
     z-index: 1000;
-}
-
-.color-tags {
-    position: absolute;
-    bottom: 10px;
-    right: 10px;
-    display: flex;
-    gap: 5px;
-}
-
-.color-box {
-    width: 10px;
-    height: 10px;
-    border-radius: 4px;
-    cursor: pointer;
-    border: 1px solid rgba(0, 0, 0, 0.2);
-}
-
-.color-box.red { background-color: red; }
-.color-box.blue { background-color: blue; }
-.color-box.orange { background-color: orange; }
-.color-box.olive-green { background-color: olive; }
-
-#new-post-bottom-right-link {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    background-color: #62d840;
-    color: #ffffff;
-    font-size: 24px;
-    font-weight: bold;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-decoration: none;
-    z-index: 1000;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
-    transition: background-color 0.3s ease;
-}
-
-#new-post-bottom-right-link:hover {
-    background-color: #4CAF50;
 }
