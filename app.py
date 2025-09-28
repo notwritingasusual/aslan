@@ -55,7 +55,6 @@ class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(100), nullable=False)
     content = db.Column(db.Text, nullable=False)
-    color_tag = db.Column(db.String(20), nullable=True) # New column for color tag
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -148,7 +147,8 @@ def index():
     else:
         posts = Post.query.order_by(Post.id.desc()).all()
 
-    return render_template('index.html', posts=posts, query=query, username=username, current_route='index')
+    recent_posts = Post.query.order_by(Post.id.desc()).limit(5).all()
+    return render_template('index.html', posts=posts, recent_posts=recent_posts, query=query, username=username, current_route='index')
 
 @app.route('/images')
 @login_required
@@ -164,34 +164,10 @@ def files_feed():
     posts = Post.query.filter(Post.content.ilike('%<a href="%')).order_by(Post.id.desc()).all()
     return render_template('index.html', posts=posts, username=username, current_route='files')
 
-@app.route('/red')
-@login_required
-def red_feed():
-    username = session.get('username')
-    posts = Post.query.filter_by(color_tag='red').order_by(Post.id.desc()).all()
-    return render_template('index.html', posts=posts, username=username, current_route='red')
+<<<<<<< HEAD
+=======
 
-@app.route('/blue')
-@login_required
-def blue_feed():
-    username = session.get('username')
-    posts = Post.query.filter_by(color_tag='blue').order_by(Post.id.desc()).all()
-    return render_template('index.html', posts=posts, username=username, current_route='blue')
-
-@app.route('/orange')
-@login_required
-def orange_feed():
-    username = session.get('username')
-    posts = Post.query.filter_by(color_tag='orange').order_by(Post.id.desc()).all()
-    return render_template('index.html', posts=posts, username=username, current_route='orange')
-
-@app.route('/olive-green')
-@login_required
-def olive_green_feed():
-    username = session.get('username')
-    posts = Post.query.filter_by(color_tag='olive-green').order_by(Post.id.desc()).all()
-    return render_template('index.html', posts=posts, username=username, current_route='olive-green')
-    return render_template('index.html', posts=posts, username=username)
+>>>>>>> 52dd08ea05c8ceb7f19268cc0d9d8b414ca95a9f
 
 #--------------------------------------------------------------------------------#
 #                                  UPLOAD ROUTES                                 #
@@ -227,13 +203,10 @@ def edit_post(post_id):
         return redirect(url_for('index'))
     return jsonify({'id': post.id, 'title': post.title, 'content': post.content})
 
-@app.route('/tag-post/<int:post_id>/<string:color>', methods=['POST'])
-@login_required
-def tag_post(post_id, color):
-    post = Post.query.get_or_404(post_id)
-    post.color_tag = color
-    db.session.commit()
-    return jsonify({'success': True, 'color': color})
+<<<<<<< HEAD
+=======
+
+>>>>>>> 52dd08ea05c8ceb7f19268cc0d9d8b414ca95a9f
 
 @app.route('/delete/<int:post_id>')
 @login_required
