@@ -147,7 +147,8 @@ def index():
     else:
         posts = Post.query.order_by(Post.id.desc()).all()
 
-    return render_template('index.html', posts=posts, query=query, username=username, current_route='index')
+    recent_posts = Post.query.order_by(Post.id.desc()).limit(5).all()
+    return render_template('index.html', posts=posts, recent_posts=recent_posts, query=query, username=username, current_route='index')
 
 @app.route('/images')
 @login_required
@@ -163,6 +164,10 @@ def files_feed():
     posts = Post.query.filter(Post.content.ilike('%<a href="%')).order_by(Post.id.desc()).all()
     return render_template('index.html', posts=posts, username=username, current_route='files')
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 52dd08ea05c8ceb7f19268cc0d9d8b414ca95a9f
 
 #--------------------------------------------------------------------------------#
 #                                  UPLOAD ROUTES                                 #
@@ -198,6 +203,10 @@ def edit_post(post_id):
         return redirect(url_for('index'))
     return jsonify({'id': post.id, 'title': post.title, 'content': post.content})
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 52dd08ea05c8ceb7f19268cc0d9d8b414ca95a9f
 
 @app.route('/delete/<int:post_id>')
 @login_required
